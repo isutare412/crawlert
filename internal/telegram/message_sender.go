@@ -35,13 +35,8 @@ func (s *MessageSender) SendMessage(ctx context.Context, message string) error {
 	if len(message) == 0 {
 		return nil
 	}
-	message = truncateLargeMessage(message)
 
-	req := sendMessageRequest{
-		ChatID: s.chatID,
-		Text:   message,
-	}
-
+	req := newSendMessageRequest(s.chatID, message)
 	reqBytes, err := json.Marshal(&req)
 	if err != nil {
 		return fmt.Errorf("marshaling message body: %w", err)
@@ -71,15 +66,6 @@ func (s *MessageSender) SendMessage(ctx context.Context, message string) error {
 	}
 
 	return nil
-}
-
-func truncateLargeMessage(msg string) string {
-	// Telegram Bot API supports up to 4096 characters.
-	// https://core.telegram.org/bots/api#sendmessage
-	if len(msg) > 4096 {
-		return msg[:4096]
-	}
-	return msg
 }
 
 func telegramBotAPIBase(botToken string) string {
