@@ -3,6 +3,7 @@ package log
 import (
 	"log/slog"
 	"os"
+	"runtime/debug"
 	"time"
 
 	"github.com/lmittmann/tint"
@@ -54,4 +55,13 @@ func Init(cfg Config) {
 			Handler(handler),
 	)
 	slog.SetDefault(logger)
+}
+
+func RecoverIfPanic() {
+	v := recover()
+	if v == nil {
+		return
+	}
+
+	slog.Error("panic occurred", "stackTrace", string(debug.Stack()))
 }
