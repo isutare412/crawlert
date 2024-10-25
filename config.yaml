@@ -1,0 +1,8 @@
+log:
+  format: text # text / json
+  level: debug # debug / info / warn / error
+  caller: true
+alerts:
+  telegram:
+    bot-token: <bot_token>
+    chat-id: <chat_id>
