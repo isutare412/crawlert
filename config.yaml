@@ -5,4 +5,5 @@ log:
 alerts:
   telegram:
     bot-token: <bot_token>
-    chat-id: <chat_id>
+    chat-ids:
+      - <chat_id>

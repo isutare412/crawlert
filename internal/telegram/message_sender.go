@@ -20,7 +20,7 @@ type MessageSender struct {
 	chatID   string
 }
 
-func NewMessageSender(cfg Config) *MessageSender {
+func NewMessageSender(cfg MessageSenderConfig) *MessageSender {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.MaxIdleConnsPerHost = 100
 

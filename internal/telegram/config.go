@@ -1,6 +1,6 @@
 package telegram
 
-type Config struct {
+type MessageSenderConfig struct {
 	BotToken string
 	ChatID   string
 }

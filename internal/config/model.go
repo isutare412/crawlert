@@ -26,11 +26,15 @@ func (c Config) ToLogConfig() log.Config {
 	return log.Config(c.Log)
 }
 
-func (c Config) ToTelegramConfig() telegram.Config {
-	return telegram.Config{
-		BotToken: c.Alerts.Telegram.BotToken,
-		ChatID:   c.Alerts.Telegram.ChatID,
+func (c Config) ToTelegramMessageSenderConfigs() []telegram.MessageSenderConfig {
+	cfgs := make([]telegram.MessageSenderConfig, 0, len(c.Alerts.Telegram.ChatIDs))
+	for _, id := range c.Alerts.Telegram.ChatIDs {
+		cfgs = append(cfgs, telegram.MessageSenderConfig{
+			BotToken: c.Alerts.Telegram.BotToken,
+			ChatID:   id,
+		})
 	}
+	return cfgs
 }
 
 type LogConfig struct {
@@ -61,16 +65,16 @@ func (c AlertsConfig) Validate() error {
 }
 
 type TelegramConfig struct {
-	BotToken string `koanf:"bot-token"`
-	ChatID   string `koanf:"chat-id"`
+	BotToken string   `koanf:"bot-token"`
+	ChatIDs  []string `koanf:"chat-ids"`
 }
 
 func (c TelegramConfig) Validate() error {
 	if c.BotToken == "" {
 		return fmt.Errorf("bot token should not be empty")
 	}
-	if c.ChatID == "" {
-		return fmt.Errorf("chat id should not be empty")
+	if len(c.ChatIDs) == 0 {
+		return fmt.Errorf("chat ids should not be empty")
 	}
 	return nil
 }

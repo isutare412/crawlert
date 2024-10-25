@@ -20,7 +20,8 @@ log:
 alerts:
   telegram:
     bot-token: test-bot-token
-    chat-id: test-chat-id
+    chat-ids:
+      - test-chat-id
 `
 
 	testLocalConfig = `
@@ -55,7 +56,7 @@ func TestLoad(t *testing.T) {
 				Alerts: AlertsConfig{
 					Telegram: TelegramConfig{
 						BotToken: "test-bot-token",
-						ChatID:   "test-chat-id",
+						ChatIDs:  []string{"test-chat-id"},
 					},
 				},
 			},
