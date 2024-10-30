@@ -1,0 +1,10 @@
+with-expecter: true
+packages:
+  github.com/isutare412/crawlert/internal/core/port:
+    config:
+      dir: "{{.InterfaceDir}}/mock{{.PackageName}}"
+      outpkg: "mock{{.PackageName}}"
+    interfaces:
+      HTTPCrawler:
+      MessageSender:
+      QueryApplier:
