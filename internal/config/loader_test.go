@@ -4,6 +4,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -17,6 +18,41 @@ log:
   format: text # text / json
   level: debug # debug / info / warn / error
   caller: true
+crawls:
+  - name: 성남시 판교수영장
+    enabled: true
+    interval: 10s
+    target:
+      http:
+        method: POST
+        url: https://foo.com/api/reserve
+        header:
+          content-type: application/json
+        body: |-
+          {"message":"hello, world!"}
+    query:
+      check: |-
+        [ .items[] | select(.name == "tester") ] | length > 0
+      variables:
+        TESTER_INFOS: |-
+          [ .items[] | select(.name == "tester") | {"address": .address} ]
+  - name: 화담숲 모노레일
+    enabled: false
+    interval: 5s
+    target:
+      http:
+        method: POST
+        url: https://bar.com/api/reserve
+        header:
+          content-type: application/json
+        body: |-
+          {"message":"bye, world!"}
+    query:
+      check: |-
+        [ .items[] | select(.name == "tester2") ] | length > 0
+      variables:
+        TESTER_INFOS: |-
+          [ .items[] | select(.name == "tester2") | {"address": .address} ]
 alerts:
   telegram:
     bot-token: test-bot-token
@@ -52,6 +88,42 @@ func TestLoad(t *testing.T) {
 					Format: log.FormatText,
 					Level:  log.LevelDebug,
 					Caller: true,
+				},
+				Crawls: []CrawlConfig{
+					{
+						Name:     "성남시 판교수영장",
+						Enabled:  true,
+						Interval: 10 * time.Second,
+						Target: CrawlTargetConfig{HTTP: CrawlHTTPTargetConfig{
+							Method: "POST",
+							URL:    "https://foo.com/api/reserve",
+							Header: map[string]string{"content-type": "application/json"},
+							Body:   `{"message":"hello, world!"}`,
+						}},
+						Query: CrawlQueryConfig{
+							Check: `[ .items[] | select(.name == "tester") ] | length > 0`,
+							Variables: map[string]string{
+								"TESTER_INFOS": `[ .items[] | select(.name == "tester") | {"address": .address} ]`,
+							},
+						},
+					},
+					{
+						Name:     "화담숲 모노레일",
+						Enabled:  false,
+						Interval: 5 * time.Second,
+						Target: CrawlTargetConfig{HTTP: CrawlHTTPTargetConfig{
+							Method: "POST",
+							URL:    "https://bar.com/api/reserve",
+							Header: map[string]string{"content-type": "application/json"},
+							Body:   `{"message":"bye, world!"}`,
+						}},
+						Query: CrawlQueryConfig{
+							Check: `[ .items[] | select(.name == "tester2") ] | length > 0`,
+							Variables: map[string]string{
+								"TESTER_INFOS": `[ .items[] | select(.name == "tester2") | {"address": .address} ]`,
+							},
+						},
+					},
 				},
 				Alerts: AlertsConfig{
 					Telegram: TelegramConfig{

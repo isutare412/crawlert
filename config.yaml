@@ -2,6 +2,31 @@ log:
   format: text # text / json
   level: debug # debug / info / warn / error
   caller: true
+
+crawls:
+  - name: 화담숲 케이블카
+    enabled: true
+    interval: 5s
+    target:
+      http:
+        method: POST
+        url: https://foo.bar.com
+        header:
+          accept: "*/*"
+          accept-language: ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7
+          user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36
+        body: |-
+          selDate=20241028&startTime=0900&itemCode=00005
+    query:
+      check: |-
+        [ .monorailInfo[] | select(.spareCnt != "0" and .spareCnt != "1") | { "startTime": .startTime, "count": .spareCnt } ] | length > 0
+      variables:
+        COUNTS: |-
+          [ .monorailInfo[] | select(.spareCnt != "0" and .spareCnt != "1") | { "startTime": .startTime, "count": .spareCnt } ]
+    message: |-
+      You have something.
+      $COUNTS
+
 alerts:
   telegram:
     bot-token: <bot_token>
