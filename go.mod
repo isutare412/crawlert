@@ -12,6 +12,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20
 	github.com/samber/slog-multi v1.2.3
 	github.com/stretchr/testify v1.9.0
+	golang.org/x/sync v0.8.0
 )
 
 require (
