@@ -48,6 +48,7 @@ func (w *messageWorker) run() {
 
 			if err := w.sendMessage(ctx, output.queryResult); err != nil {
 				slog.ErrorContext(ctx, "failed to send message", "error", err)
+				continue
 			}
 			slog.InfoContext(ctx, "sent message as query matched")
 		}
