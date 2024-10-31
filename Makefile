@@ -21,6 +21,10 @@ help: ## Display this help.
 run: ## Run Crawlert.
 	go run ./cmd/...
 
+.PHONY: test
+test: ## Run tests.
+	go test ./...
+
 .PHONY: mocks
 mocks: mockery ## Generate mock implementations.
 	$(MOCKERY) --config mockery.yaml
