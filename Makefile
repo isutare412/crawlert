@@ -6,6 +6,10 @@ help: ## Display this help.
 
 ##@ Development
 
+.PHONY: run
+run: ## Run Crawlert.
+	go run ./cmd/...
+
 .PHONY: mocks
 mocks: mockery ## Generate mock implementations.
 	$(MOCKERY) --config mockery.yaml
