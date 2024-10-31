@@ -16,4 +16,4 @@ Reference comments in [sample config file](config.yaml).
 ## Deploy to Kubernetes
 
 1. Prepare you own values file (e.g. `my_values.yaml`)
-2. `helm upgrade --install crawlert ./charts/crawlert -f my_values.yaml
+2. `helm upgrade --install crawlert ./charts/crawlert -f my_values.yaml`
