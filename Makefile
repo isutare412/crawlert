@@ -1,3 +1,14 @@
+ifneq (,$(wildcard ./.env.local))
+    include .env.local
+    export $(shell sed 's/=.*//' ./.env.local)
+endif
+
+TAG ?= latest
+IMAGE ?= redshoore/crawlert:$(TAG)
+
+DOCKER_USER ?= <docker_hub_username>
+DOCKER_PASSWORD ?= <docker_hub_secret>
+
 ##@ General
 
 .PHONY: help
@@ -13,6 +24,17 @@ run: ## Run Crawlert.
 .PHONY: mocks
 mocks: mockery ## Generate mock implementations.
 	$(MOCKERY) --config mockery.yaml
+
+##@ Build
+
+.PHONY: image-build
+image-build: ## Build docker image.
+	docker build -f ./Dockerfile -t $(IMAGE) .
+
+.PHONY: image-push
+image-push: ## Push docker image.
+	echo $(DOCKER_PASSWORD) | docker login -u $(DOCKER_USER) --password-stdin
+	docker push $(IMAGE)
 
 ##@ Tool Dependencies
 
