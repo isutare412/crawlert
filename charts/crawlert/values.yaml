@@ -1,0 +1,151 @@
+# Default values for crawlert.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: redshoore/crawlert
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: false
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+# Additional volumes on the output Deployment definition.
+volumes: []
+# - name: foo
+#   secret:
+#     secretName: mysecret
+#     optional: false
+
+# Additional volumeMounts on the output Deployment definition.
+volumeMounts: []
+# - name: foo
+#   mountPath: "/etc/foo"
+#   readOnly: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+config:
+  # Log setting.
+  log:
+    # Format of log. Must be one of the following.
+    # - text
+    # - json
+    format: text # text / json
+
+    # Level of log.
+    # Must be one of the following.
+    # - debug
+    # - info
+    # - warn
+    # - error
+    level: debug # debug / info / warn / error
+
+    # Whether to log file position in logs.
+    caller: true
+
+  crawls:
+      # Name of crawl targets. The name is used in logging.
+    - name: JSONPlaceHolder
+
+      # Whether to enable this target.
+      enabled: true
+
+      # Crawling interval.
+      interval: 10s
+
+      # Target setting.
+      target:
+        # Only support HTTP crawling for now.
+        http:
+          # HTTP method to use.
+          method: GET
+
+          # URL for crawling.
+          url: https://jsonplaceholder.typicode.com/todos
+
+          # HTTP header of each crawl.
+          header:
+            accept: application/json
+
+          # HTTP body of each crawl.
+          body: ""
+
+      # Query defines jq patterns to be applied to the result of crawls.
+      query:
+
+        # If result of check query is "true" or positive number, the check passes and the message is sent to telegram.
+        check: |-
+          [ .[] | select(.userId == 1) ] | length > 0
+
+        # Variables can be used in the message. $FOO, ${FOO} is substitued to the value of FOO.
+        variables:
+          TITLES: |-
+            [ .[] | select(.userId == 1) | .title ]
+
+      # Template of a message to be sent to Telegram. You can reference variables using $FOO, ${FOO} pattern.
+      message: |-
+        Found titles of user 1.
+        ```
+        $TITLES
+        ```
+
+  # Alert setting.
+  alerts:
+
+    # Alert setting for telegram.
+    telegram:
+
+      # Bot token of your bot.
+      # ref: https://www.directual.com/lesson-library/how-to-create-a-telegram-bot
+      bot-token: <bot_token>
+
+      # Chatting ID
+      # ref: https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a
+      chat-ids:
+        - <chat_id>
