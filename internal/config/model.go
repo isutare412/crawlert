@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/isutare412/crawlert/internal/log"
+	"github.com/isutare412/crawlert/internal/pipeline"
 	"github.com/isutare412/crawlert/internal/telegram"
 )
 
@@ -45,6 +46,24 @@ func (c Config) ToTelegramMessageSenderConfigs() []telegram.MessageSenderConfig 
 		})
 	}
 	return cfgs
+}
+
+func (c Config) ToPipelineProcessorConfig() pipeline.ProcessorConfig {
+	crawlCfgs := make([]pipeline.CrawlConfig, 0, len(c.Crawls))
+	for _, cfg := range c.Crawls {
+		crawlCfgs = append(crawlCfgs, pipeline.CrawlConfig{
+			Name:     cfg.Name,
+			Enabled:  cfg.Enabled,
+			Interval: cfg.Interval,
+			Target:   pipeline.CrawlTargetConfig{HTTP: pipeline.CrawlHTTPTargetConfig(cfg.Target.HTTP)},
+			Query:    pipeline.CrawlQueryConfig(cfg.Query),
+			Message:  cfg.Message,
+		})
+	}
+
+	return pipeline.ProcessorConfig{
+		Crawls: crawlCfgs,
+	}
 }
 
 type LogConfig struct {
