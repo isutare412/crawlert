@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 	"github.com/isutare412/crawlert/internal/core/port"
 	"github.com/isutare412/crawlert/internal/log"
 	"github.com/isutare412/crawlert/internal/query"
@@ -69,10 +69,10 @@ func (w *queryWorker) shutdown() {
 	w.wg.Wait()
 }
 
-func (w *queryWorker) query(ctx context.Context, crawlResp model.CrawlResponse) (model.QueryResult, error) {
+func (w *queryWorker) query(ctx context.Context, crawlResp domain.CrawlResponse) (domain.QueryResult, error) {
 	result, err := w.applier.ApplyQuery(crawlResp.Body)
 	if err != nil {
-		return model.QueryResult{}, fmt.Errorf("applying query: %w", err)
+		return domain.QueryResult{}, fmt.Errorf("applying query: %w", err)
 	}
 
 	return result, nil

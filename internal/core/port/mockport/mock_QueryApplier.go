@@ -3,7 +3,7 @@
 package mockport
 
 import (
-	model "github.com/isutare412/crawlert/internal/core/model"
+	domain "github.com/isutare412/crawlert/internal/core/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -21,22 +21,22 @@ func (_m *MockQueryApplier) EXPECT() *MockQueryApplier_Expecter {
 }
 
 // ApplyQuery provides a mock function with given fields: jsonBytes
-func (_m *MockQueryApplier) ApplyQuery(jsonBytes []byte) (model.QueryResult, error) {
+func (_m *MockQueryApplier) ApplyQuery(jsonBytes []byte) (domain.QueryResult, error) {
 	ret := _m.Called(jsonBytes)
 
 	if len(ret) == 0 {
 		panic("no return value specified for ApplyQuery")
 	}
 
-	var r0 model.QueryResult
+	var r0 domain.QueryResult
 	var r1 error
-	if rf, ok := ret.Get(0).(func([]byte) (model.QueryResult, error)); ok {
+	if rf, ok := ret.Get(0).(func([]byte) (domain.QueryResult, error)); ok {
 		return rf(jsonBytes)
 	}
-	if rf, ok := ret.Get(0).(func([]byte) model.QueryResult); ok {
+	if rf, ok := ret.Get(0).(func([]byte) domain.QueryResult); ok {
 		r0 = rf(jsonBytes)
 	} else {
-		r0 = ret.Get(0).(model.QueryResult)
+		r0 = ret.Get(0).(domain.QueryResult)
 	}
 
 	if rf, ok := ret.Get(1).(func([]byte) error); ok {
@@ -66,12 +66,12 @@ func (_c *MockQueryApplier_ApplyQuery_Call) Run(run func(jsonBytes []byte)) *Moc
 	return _c
 }
 
-func (_c *MockQueryApplier_ApplyQuery_Call) Return(_a0 model.QueryResult, _a1 error) *MockQueryApplier_ApplyQuery_Call {
+func (_c *MockQueryApplier_ApplyQuery_Call) Return(_a0 domain.QueryResult, _a1 error) *MockQueryApplier_ApplyQuery_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockQueryApplier_ApplyQuery_Call) RunAndReturn(run func([]byte) (model.QueryResult, error)) *MockQueryApplier_ApplyQuery_Call {
+func (_c *MockQueryApplier_ApplyQuery_Call) RunAndReturn(run func([]byte) (domain.QueryResult, error)) *MockQueryApplier_ApplyQuery_Call {
 	_c.Call.Return(run)
 	return _c
 }

@@ -3,9 +3,9 @@ package port
 import (
 	"context"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 )
 
 type HTTPCrawler interface {
-	Crawl(context.Context, model.CrawlRequest) (model.CrawlResponse, error)
+	Crawl(context.Context, domain.CrawlRequest) (domain.CrawlResponse, error)
 }

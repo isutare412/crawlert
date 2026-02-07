@@ -8,7 +8,7 @@ import (
 
 	"github.com/itchyny/gojq"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 )
 
 type Applier struct {
@@ -38,27 +38,27 @@ func NewApplier(checkQuery string, variableQueries map[string]string) (*Applier,
 	}, nil
 }
 
-func (e *Applier) ApplyQuery(jsonBytes []byte) (model.QueryResult, error) {
+func (e *Applier) ApplyQuery(jsonBytes []byte) (domain.QueryResult, error) {
 	var target any
 	if err := json.Unmarshal(jsonBytes, &target); err != nil {
-		return model.QueryResult{}, fmt.Errorf("unmarshaling into json: %w", err)
+		return domain.QueryResult{}, fmt.Errorf("unmarshaling into json: %w", err)
 	}
 
 	checkResult, err := queryFirstItem(e.checkQuery, target)
 	if err != nil {
-		return model.QueryResult{}, fmt.Errorf("applying check query: %w", err)
+		return domain.QueryResult{}, fmt.Errorf("applying check query: %w", err)
 	}
 
 	variables := make(map[string]string, len(e.variableQueries))
 	for key, query := range e.variableQueries {
 		result, err := queryFirstItem(query, target)
 		if err != nil {
-			return model.QueryResult{}, fmt.Errorf("applying variable '%s' query: %w", key, err)
+			return domain.QueryResult{}, fmt.Errorf("applying variable '%s' query: %w", key, err)
 		}
 		variables[key] = result
 	}
 
-	return model.QueryResult{
+	return domain.QueryResult{
 		Matched:   isTruthyValue(checkResult),
 		Variables: variables,
 	}, nil

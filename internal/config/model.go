@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/isutare412/crawlert/internal/discord"
 	"github.com/isutare412/crawlert/internal/log"
 	"github.com/isutare412/crawlert/internal/pipeline"
 	"github.com/isutare412/crawlert/internal/telegram"
@@ -35,6 +36,16 @@ func (c Config) Validate() error {
 
 func (c Config) ToLogConfig() log.Config {
 	return log.Config(c.Log)
+}
+
+func (c Config) ToDiscordMessageSenderConfigs() []discord.MessageSenderConfig {
+	cfgs := make([]discord.MessageSenderConfig, 0, len(c.Alerts.Discord.WebhookURLs))
+	for _, url := range c.Alerts.Discord.WebhookURLs {
+		cfgs = append(cfgs, discord.MessageSenderConfig{
+			WebhookURL: url,
+		})
+	}
+	return cfgs
 }
 
 func (c Config) ToTelegramMessageSenderConfigs() []telegram.MessageSenderConfig {
@@ -148,12 +159,34 @@ type CrawlQueryConfig struct {
 }
 
 type AlertsConfig struct {
+	Type     string         `koanf:"type"`
 	Telegram TelegramConfig `koanf:"telegram"`
+	Discord  DiscordConfig  `koanf:"discord"`
 }
 
 func (c AlertsConfig) Validate() error {
-	if err := c.Telegram.Validate(); err != nil {
-		return fmt.Errorf("validating telegram config: %w", err)
+	switch c.Type {
+	case "telegram":
+		if err := c.Telegram.Validate(); err != nil {
+			return fmt.Errorf("validating telegram config: %w", err)
+		}
+	case "discord":
+		if err := c.Discord.Validate(); err != nil {
+			return fmt.Errorf("validating discord config: %w", err)
+		}
+	default:
+		return fmt.Errorf("unknown alerts type %q; expected \"telegram\" or \"discord\"", c.Type)
+	}
+	return nil
+}
+
+type DiscordConfig struct {
+	WebhookURLs []string `koanf:"webhook-urls"`
+}
+
+func (c DiscordConfig) Validate() error {
+	if len(c.WebhookURLs) == 0 {
+		return fmt.Errorf("webhook urls should not be empty")
 	}
 	return nil
 }

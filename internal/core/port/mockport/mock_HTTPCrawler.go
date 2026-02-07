@@ -5,7 +5,7 @@ package mockport
 import (
 	context "context"
 
-	model "github.com/isutare412/crawlert/internal/core/model"
+	domain "github.com/isutare412/crawlert/internal/core/domain"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -23,25 +23,25 @@ func (_m *MockHTTPCrawler) EXPECT() *MockHTTPCrawler_Expecter {
 }
 
 // Crawl provides a mock function with given fields: _a0, _a1
-func (_m *MockHTTPCrawler) Crawl(_a0 context.Context, _a1 model.CrawlRequest) (model.CrawlResponse, error) {
+func (_m *MockHTTPCrawler) Crawl(_a0 context.Context, _a1 domain.CrawlRequest) (domain.CrawlResponse, error) {
 	ret := _m.Called(_a0, _a1)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Crawl")
 	}
 
-	var r0 model.CrawlResponse
+	var r0 domain.CrawlResponse
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, model.CrawlRequest) (model.CrawlResponse, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, domain.CrawlRequest) (domain.CrawlResponse, error)); ok {
 		return rf(_a0, _a1)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, model.CrawlRequest) model.CrawlResponse); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, domain.CrawlRequest) domain.CrawlResponse); ok {
 		r0 = rf(_a0, _a1)
 	} else {
-		r0 = ret.Get(0).(model.CrawlResponse)
+		r0 = ret.Get(0).(domain.CrawlResponse)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, model.CrawlRequest) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, domain.CrawlRequest) error); ok {
 		r1 = rf(_a0, _a1)
 	} else {
 		r1 = ret.Error(1)
@@ -57,24 +57,24 @@ type MockHTTPCrawler_Crawl_Call struct {
 
 // Crawl is a helper method to define mock.On call
 //   - _a0 context.Context
-//   - _a1 model.CrawlRequest
+//   - _a1 domain.CrawlRequest
 func (_e *MockHTTPCrawler_Expecter) Crawl(_a0 interface{}, _a1 interface{}) *MockHTTPCrawler_Crawl_Call {
 	return &MockHTTPCrawler_Crawl_Call{Call: _e.mock.On("Crawl", _a0, _a1)}
 }
 
-func (_c *MockHTTPCrawler_Crawl_Call) Run(run func(_a0 context.Context, _a1 model.CrawlRequest)) *MockHTTPCrawler_Crawl_Call {
+func (_c *MockHTTPCrawler_Crawl_Call) Run(run func(_a0 context.Context, _a1 domain.CrawlRequest)) *MockHTTPCrawler_Crawl_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(model.CrawlRequest))
+		run(args[0].(context.Context), args[1].(domain.CrawlRequest))
 	})
 	return _c
 }
 
-func (_c *MockHTTPCrawler_Crawl_Call) Return(_a0 model.CrawlResponse, _a1 error) *MockHTTPCrawler_Crawl_Call {
+func (_c *MockHTTPCrawler_Crawl_Call) Return(_a0 domain.CrawlResponse, _a1 error) *MockHTTPCrawler_Crawl_Call {
 	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *MockHTTPCrawler_Crawl_Call) RunAndReturn(run func(context.Context, model.CrawlRequest) (model.CrawlResponse, error)) *MockHTTPCrawler_Crawl_Call {
+func (_c *MockHTTPCrawler_Crawl_Call) RunAndReturn(run func(context.Context, domain.CrawlRequest) (domain.CrawlResponse, error)) *MockHTTPCrawler_Crawl_Call {
 	_c.Call.Return(run)
 	return _c
 }

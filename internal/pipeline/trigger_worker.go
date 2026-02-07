@@ -6,14 +6,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 	"github.com/isutare412/crawlert/internal/log"
 )
 
 type triggerWorker struct {
 	jobName        string
 	interval       time.Duration
-	crawlRequest   model.CrawlRequest
+	crawlRequest   domain.CrawlRequest
 	triggerOutputs chan<- triggerOutput
 
 	lifetimeCtx    context.Context
@@ -68,8 +68,8 @@ func (w *triggerWorker) trigger() {
 	}
 }
 
-func buildCrawlRequest(cfg CrawlHTTPTargetConfig) model.CrawlRequest {
-	return model.CrawlRequest{
+func buildCrawlRequest(cfg CrawlHTTPTargetConfig) domain.CrawlRequest {
+	return domain.CrawlRequest{
 		URL:    cfg.URL,
 		Method: cfg.Method,
 		Header: buildHTTPHeader(cfg.Header),

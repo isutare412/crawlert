@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 	"github.com/isutare412/crawlert/internal/core/port"
 	"github.com/isutare412/crawlert/internal/log"
 )
@@ -61,7 +61,7 @@ func (w *messageWorker) shutdown() {
 
 func (w *messageWorker) sendMessage(
 	ctx context.Context,
-	queryRes model.QueryResult,
+	queryRes domain.QueryResult,
 ) error {
 	message := buildMessage(w.template, queryRes.Variables)
 

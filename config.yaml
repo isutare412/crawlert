@@ -55,7 +55,7 @@ crawls:
         TITLES: |-
           [ .[] | select(.userId == 1) | .title ]
 
-    # Template of a message to be sent to Telegram. You can reference variables using $FOO, ${FOO} pattern.
+    # Template of a message to be sent to the alert receiver. You can reference variables using $FOO, ${FOO} pattern.
     message: |-
       Found titles of user 1.
       ```
@@ -65,7 +65,12 @@ crawls:
 # Alert setting.
 alerts:
 
-  # Alert setting for telegram.
+  # Type of alert receiver. Must be one of the following.
+  # - telegram
+  # - discord
+  type: discord
+
+  # Alert setting for Telegram.
   telegram:
 
     # Bot token of your bot.
@@ -76,3 +81,11 @@ alerts:
     # ref: https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a
     chat-ids:
       - <chat_id>
+
+  # Alert setting for Discord.
+  discord:
+  
+    # Discord webhook URLs.
+    # ref: https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
+    webhook-urls:
+      - <webhook_url>

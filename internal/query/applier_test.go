@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 )
 
 var rawJSONs = [...]string{
@@ -69,7 +69,7 @@ func TestExecutor_ApplyQuery(t *testing.T) {
 		name    string
 		inits   inits
 		args    args
-		want    model.QueryResult
+		want    domain.QueryResult
 		wantErr bool
 	}{
 		{
@@ -80,7 +80,7 @@ func TestExecutor_ApplyQuery(t *testing.T) {
 			args: args{
 				jsonBytes: []byte(rawJSONs[0]),
 			},
-			want: model.QueryResult{
+			want: domain.QueryResult{
 				Matched:   true,
 				Variables: map[string]string{},
 			},
@@ -93,7 +93,7 @@ func TestExecutor_ApplyQuery(t *testing.T) {
 			args: args{
 				jsonBytes: []byte(rawJSONs[0]),
 			},
-			want: model.QueryResult{
+			want: domain.QueryResult{
 				Matched:   false,
 				Variables: map[string]string{},
 			},
@@ -110,7 +110,7 @@ func TestExecutor_ApplyQuery(t *testing.T) {
 			args: args{
 				jsonBytes: []byte(rawJSONs[1]),
 			},
-			want: model.QueryResult{
+			want: domain.QueryResult{
 				Matched: true,
 				Variables: map[string]string{
 					"NAMES":       `["Alice","Bob"]`,

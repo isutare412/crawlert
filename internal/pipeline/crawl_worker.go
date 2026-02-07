@@ -6,7 +6,7 @@ import (
 	"log/slog"
 	"sync"
 
-	"github.com/isutare412/crawlert/internal/core/model"
+	"github.com/isutare412/crawlert/internal/core/domain"
 	"github.com/isutare412/crawlert/internal/core/port"
 	"github.com/isutare412/crawlert/internal/log"
 )
@@ -54,10 +54,10 @@ func (w *crawlWorker) shutdown() {
 	w.wg.Wait()
 }
 
-func (w *crawlWorker) crawl(ctx context.Context, req model.CrawlRequest) (model.CrawlResponse, error) {
+func (w *crawlWorker) crawl(ctx context.Context, req domain.CrawlRequest) (domain.CrawlResponse, error) {
 	resp, err := w.httpCrawler.Crawl(ctx, req)
 	if err != nil {
-		return model.CrawlResponse{}, fmt.Errorf("crawling http: %w", err)
+		return domain.CrawlResponse{}, fmt.Errorf("crawling http: %w", err)
 	}
 
 	return resp, nil

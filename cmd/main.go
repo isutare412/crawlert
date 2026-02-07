@@ -10,6 +10,7 @@ import (
 
 	"github.com/isutare412/crawlert/internal/config"
 	"github.com/isutare412/crawlert/internal/core/port"
+	"github.com/isutare412/crawlert/internal/discord"
 	"github.com/isutare412/crawlert/internal/http"
 	"github.com/isutare412/crawlert/internal/log"
 	"github.com/isutare412/crawlert/internal/pipeline"
@@ -32,16 +33,16 @@ func main() {
 
 	httpCrawler := http.NewCrawler()
 
-	var messageSenders []*telegram.MessageSender
-	for _, cfg := range cfg.ToTelegramMessageSenderConfigs() {
-		sender := telegram.NewMessageSender(cfg)
-		messageSenders = append(messageSenders, sender)
+	messageSenders, err := buildMessageSenders(cfg)
+	if err != nil {
+		slog.Error("failed to build message senders", "error", err)
+		os.Exit(1)
 	}
 
 	pipelineProcessor, err := pipeline.NewProcessor(
 		cfg.ToPipelineProcessorConfig(),
 		httpCrawler,
-		toMessageSenderInterfaces(messageSenders))
+		messageSenders)
 	if err != nil {
 		slog.Error("failed to create pipeline processor", "error", err)
 		os.Exit(1)
@@ -73,10 +74,21 @@ func loadConfig() (*config.Config, error) {
 	return cfg, nil
 }
 
-func toMessageSenderInterfaces(s []*telegram.MessageSender) []port.MessageSender {
-	res := make([]port.MessageSender, 0, len(s))
-	for _, ms := range s {
-		res = append(res, ms)
+func buildMessageSenders(cfg *config.Config) ([]port.MessageSender, error) {
+	switch cfg.Alerts.Type {
+	case "telegram":
+		var senders []port.MessageSender
+		for _, c := range cfg.ToTelegramMessageSenderConfigs() {
+			senders = append(senders, telegram.NewMessageSender(c))
+		}
+		return senders, nil
+	case "discord":
+		var senders []port.MessageSender
+		for _, c := range cfg.ToDiscordMessageSenderConfigs() {
+			senders = append(senders, discord.NewMessageSender(c))
+		}
+		return senders, nil
+	default:
+		return nil, fmt.Errorf("unknown alerts type: %s", cfg.Alerts.Type)
 	}
-	return res
 }
