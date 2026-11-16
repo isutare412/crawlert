@@ -51,6 +51,11 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
+# Environment variables for the container (list of EnvVar, valueFrom allowed). The app
+# reads APP_<path> with "_" between levels after the config files, e.g.
+# APP_ALERTS_DISCORD_WEBHOOK-URLS for alerts.discord.webhook-urls; use it for secrets.
+envs: []
+
 # Additional volumes on the output Deployment definition.
 volumes: []
 # - name: foo
